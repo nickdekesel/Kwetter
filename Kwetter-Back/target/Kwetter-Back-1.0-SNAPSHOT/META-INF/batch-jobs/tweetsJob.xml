@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job id="tweetsJob" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+    <step id="firstStep" >
+        <chunk item-count="3">
+            <reader ref="tweetItemReader"/>
+            <processor ref="tweetItemProcessor"/>
+            <writer ref="tweetItemWriter"/>
+        </chunk>    
+    </step>
+</job>

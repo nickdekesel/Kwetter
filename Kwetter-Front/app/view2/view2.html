@@ -1,0 +1,122 @@
+<div class="container">    
+    <div class="row top-personal">
+        <div class="col-lg-6">
+            <form ng-submit="searchTweet(true)">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="searchString.tweet" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <input class="btn btn-default" type="submit" value="GO!">                      
+                </span>
+            </div><!-- /input-group -->
+            </form>
+        </div><!-- /.col-lg-6 -->
+
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                {{curUser.username}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="#/view1" >Logout</a></li>           
+            </ul>
+        </div>
+    </div>
+
+    <div class="tweet-post form-group col-lg-6">
+        <form ng-submit="addTweet()">
+            <textarea ng-model="newTweet.tweet" type="text" rows="5" class="form-control" placeholder="What's happening?" name="tweetText"></textarea>            
+            <div class="pull-right post-btn"> 
+                {{140 - newTweet.tweet.length}}
+                <input type="submit" class="btn btn-primary" value="Post"/>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <div class="row panel panel-primary col-lg-6 pull-right" style="min-height: 180px" >
+            <div class="panel-heading">
+                <h3 class="panel-title">Your Tweets {{userTweets.length}}</h3>
+            </div> 
+            <div class="panel panel-info" ng-repeat="tweet in userTweets | orderBy: '-date' | limitTo: 1" >
+                <blockquote>{{tweet.tweet}}</blockquote>
+                <em class="panel-footer pull-right"><span am-time-ago="tweet.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{tweet.postedFrom}}</em>
+                <hr>
+            </div>
+        </div>       
+    </div>
+
+
+    <div ng-controller="TimeLineController as timeline">
+        <div class="row panel panel-primary col-lg-6" style="min-height: 250px" >
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{active:timeline.isTab(0)}"><a href="" ng-click="timeline.setTab(0)">Timeline</a></li>
+                <li role="presentation" ng-class="{active:timeline.isTab(1)}"><a href="" ng-click="timeline.setTab(1);
+                                                                                 updateMentions(curUser.username)">@Mentions</a></li>
+                <li role="presentation" ng-class="{active:timeline.isTab(2)}"><a href="" ng-click="timeline.setTab(2)">#Trending </a></li>
+            </ul> 
+            <div ng-show="timeline.isTab(0)">
+                <div ng-show="searchString.tweet.length>0" class="panel panel-info" ng-repeat="searchTweet in allTweets| filter: searchString:strict | orderBy: '-date'">
+                    <blockquote><strong>{{searchTweet.username}} - </strong>{{searchTweet.tweet}}</blockquote>
+                    <em class="panel-footer pull-right"><span am-time-ago="searchTweet.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{searchTweet.postedFrom}}</em>
+                    <hr>
+                </div> 
+                <div ng-hide="searchString.tweet.length>0" class="panel panel-info" ng-repeat="timelineTweet in timelineTweets| orderBy: '-date'">
+                    <blockquote><strong>{{timelineTweet.username}} - </strong>{{timelineTweet.tweet}}</blockquote>
+                    <em class="panel-footer pull-right"><span am-time-ago="timelineTweet.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{timelineTweet.postedFrom}}</em>
+                    <hr>
+                </div> 
+            </div>
+            <div ng-show="timeline.isTab(1)" ng-repeat="mention in mentions | orderBy: '-tweet.date'">
+                <div class="panel panel-info">
+                    <blockquote><strong>{{mention.username}} - </strong>{{mention.tweet}}</blockquote>
+                    <em class="panel-footer pull-right"><span am-time-ago="mention.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{mention.postedFrom}}</em>
+                    <hr>
+                </div>
+            </div>
+            <div ng-show="timeline.isTab(2)">
+                <div ng-hide="curHashtag.length>0">No Trending selected</div>
+            </div>
+            <div ng-show="timeline.isTab(2)" ng-repeat="trending in getTrending(curHashtag).tweets | orderBy: '-date'">
+                
+                <div class="panel panel-info">
+                    <blockquote><strong>{{trending.username}} - </strong>{{trending.tweet}}</blockquote>
+                    <em class="panel-footer pull-right"><span am-time-ago="trending.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{trending.postedFrom}}</em>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="row panel panel-primary col-lg-6 pull-right" > 
+                <div ng-if="trendings.length ===0">No Trendings</div>
+                <div ng-repeat="trending in trendings | orderBy: '-amount' | limitTo: 10">                
+                    <a href="" ng-click="setTrending(trending.hashtag); timeline.setTab(2)">{{trending.hashtag}}</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="row panel panel-primary col-lg-6 pull-right">
+        <span>
+        <div>
+            followers {{followers.length}}
+        </div>
+        <div class="avatars">
+            <span ng-repeat="follower in followers | limitTo: 4">
+                <img ng-click="selectUser(follower.id);  redirect('/view1')" class="profile-pic clickable" ng-src="{{follower.img}}">
+            </span>
+        </div>
+        </span>
+        <span>
+        <div>
+            following {{following.length}}
+        </div>
+        <div class="avatars">
+            <span ng-repeat="follow in following| limitTo: 4">
+                <img ng-click="selectUser(follow.id); redirect('/view1')" class="profile-pic clickable" ng-src="{{follow.img}}">
+            </span>  
+        </div>
+        </span>
+    </div>   
+
+</div>
