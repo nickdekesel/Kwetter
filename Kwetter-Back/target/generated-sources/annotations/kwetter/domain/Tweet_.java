@@ -6,7 +6,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 import kwetter.domain.User;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-03-27T11:43:41")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-03-31T11:40:11")
 @StaticMetamodel(Tweet.class)
 public class Tweet_ { 
 

@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -21,8 +23,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@Entity(name = "account")
-@Table(name = "account")
+@Entity(name = "account") @Table(name = "account")
+@NamedQueries({
+    @NamedQuery(name="Account.findAll",
+                query="SELECT u FROM account u"),
+    @NamedQuery(name="Account.findByUsername",
+                query="SELECT u FROM account u where u.username = :username")
+}) 
 public class User {
 
     @Transient

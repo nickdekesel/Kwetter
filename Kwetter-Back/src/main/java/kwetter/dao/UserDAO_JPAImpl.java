@@ -1,22 +1,14 @@
 package kwetter.dao;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.Random;
-import javax.annotation.PostConstruct;
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
-import javax.ejb.Startup;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
 //@Alternative
@@ -70,7 +62,7 @@ public class UserDAO_JPAImpl implements UserDAO {
 
     @Override
     public List<User> findAll() {       
-        Query query = em.createQuery("SELECT u FROM account u");
+        Query query = em.createNamedQuery("Account.findAll");
         return (List<User>) query.getResultList();
     }
 
@@ -88,7 +80,7 @@ public class UserDAO_JPAImpl implements UserDAO {
     
     @Override
     public User find(String username) {
-        User u = em.createQuery("SELECT u FROM account u where u.username = :username", User.class)
+        User u = em.createNamedQuery("Account.findByUsername", User.class)
                  .setParameter("username", username).getSingleResult();
         return u;
     }   

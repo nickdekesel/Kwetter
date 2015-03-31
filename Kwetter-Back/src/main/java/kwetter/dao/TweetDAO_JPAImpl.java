@@ -15,7 +15,6 @@ import kwetter.domain.Trend;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
-//@Alternative
 @Stateless
 @TweetDOA_JPAQualifier
 public class TweetDAO_JPAImpl implements TweetDAO {
@@ -45,20 +44,20 @@ public class TweetDAO_JPAImpl implements TweetDAO {
 
     @Override
     public Collection<Tweet> findAll() {
-        Query query = em.createQuery("select t from tweet t");
+        Query query = em.createNamedQuery("Tweet.findAll");
         return query.getResultList();
     }
     
     @Override
     public Collection<Tweet> findAllFrom(String username) {
-        Query query = em.createQuery("select t from tweet t where t.user = :user")
+        Query query = em.createNamedQuery("Tweet.findAllFrom")
                 .setParameter("user", userDAO.find(username));
         return query.getResultList();
     }
     
     @Override
     public Collection<Tweet> findAllFrom(Long userId) {
-        Query query = em.createQuery("select t from tweet t where t.user = :user")
+        Query query = em.createNamedQuery("Tweet.findAllFrom")
                 .setParameter("user", userDAO.find(userId));
         return query.getResultList();
     }
@@ -66,7 +65,7 @@ public class TweetDAO_JPAImpl implements TweetDAO {
     
     @Override
     public Collection<Tweet> getMentions(String username) {
-        Query query = em.createQuery("select t from tweet t where t.tweet like :username")
+        Query query = em.createNamedQuery("Tweet.findMentions")
                 .setParameter("username", "%@"+username +"%" );
         return query.getResultList();
     }
@@ -75,7 +74,7 @@ public class TweetDAO_JPAImpl implements TweetDAO {
     public Collection<Trend> getTrends() {
         List<Trend> trends = new ArrayList<>();
         
-        Query query = em.createQuery("select t from tweet t where t.tweet like '%#%'");
+        Query query = em.createNamedQuery("Tweet.findTrends");
         for(Object res: query.getResultList()){
             Tweet tweet = (Tweet)res;
             if(checkDate(tweet.getDate())){

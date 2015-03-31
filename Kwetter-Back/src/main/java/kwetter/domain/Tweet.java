@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,6 +20,16 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 
 @Entity(name="tweet")  @Table(name="tweet")
+@NamedQueries({
+    @NamedQuery(name="Tweet.findAll",
+                query="select t from tweet t"),
+    @NamedQuery(name="Tweet.findAllFrom",
+                query="select t from tweet t where t.user = :user"),
+    @NamedQuery(name="Tweet.findMentions",
+                query="select t from tweet t where t.tweet like :username"),
+    @NamedQuery(name="Tweet.findTrends",
+                query="select t from tweet t where t.tweet like '%#%'")
+}) 
 public class Tweet {
     @Transient
     private static long serialVersionUID = 1L;
@@ -34,11 +46,6 @@ public class Tweet {
     private String postedFrom;   
     @JoinColumn(name="user") @ManyToOne(cascade = CascadeType.PERSIST)
     private User user;
-    
-    
-    
-    /*@ManyToOne
-    private User user;*/
 
     public Tweet() {
     }
