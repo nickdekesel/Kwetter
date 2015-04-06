@@ -60,14 +60,12 @@ public class Tweet {
         this.tweet = tweet;
         this.postDate = date;
         this.postedFrom = from;
-    }
-    
+    }  
 
     @XmlElement(name = "username")
     public String getUsername() {
         return this.user.getUsername();
     }
-     
     
     public void setUser(User user) {
         this.user = user;
@@ -96,7 +94,6 @@ public class Tweet {
     public void setPostedFrom(String from) {
         this.postedFrom = from;
     }
-
 
     @Override
     public int hashCode() {

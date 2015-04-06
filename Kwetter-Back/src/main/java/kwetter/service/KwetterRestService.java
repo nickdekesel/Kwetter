@@ -34,14 +34,13 @@ public class KwetterRestService {
     @Inject
     KwetterService kwetterService;
     
-    @GET
+    @POST
     @Path("batch")
-    @Produces("application/json")
-    public Long batch(){ 
+    public void batch(){ 
         kwetterService.initUsers();
         JobOperator jo = BatchRuntime.getJobOperator();
         long jid = jo.start("tweetsJob", new Properties());
-        return jid;
+
     }
     
     @GET
@@ -131,5 +130,23 @@ public class KwetterRestService {
         MultivaluedMap<String, String> map = ui.getQueryParameters();
         String tweet = map.get("tweet").get(0);
         return kwetterService.addTweet(username, tweet);
-    }    
+    } 
+    
+    @POST
+    @Path("roles/add")
+    @Consumes("application/json")    
+    public void addRole(@Context UriInfo ui){ 
+        MultivaluedMap<String, String> map = ui.getQueryParameters();
+        String rolename = map.get("role").get(0);
+        kwetterService.addRole(rolename);
+    }
+    
+    @POST
+    @Path("roles/addToUser/{username}")
+    @Consumes("application/json")    
+    public void addRoleToUser(@Context UriInfo ui, @PathParam("username")String username){ 
+        MultivaluedMap<String, String> map = ui.getQueryParameters();
+        String rolename = map.get("role").get(0);
+        kwetterService.addUserRole(username, rolename);
+    }
 }

@@ -2,8 +2,6 @@ package kwetter.dao;
 
 import kwetter.event.TweetEvent;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import kwetter.domain.Trend;
 import kwetter.domain.User;
 import kwetter.domain.Tweet;

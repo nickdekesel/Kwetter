@@ -50,7 +50,6 @@ public class TweetItemProcessor implements ItemProcessor {
             tweet.setUser(userDAO.find(username));
             return tweet;
         }
-        //TODO parse JSON to Tweet
         return null;       
     }
 }

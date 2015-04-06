@@ -1,12 +1,12 @@
 package kwetter.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,18 +23,20 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@Entity(name = "account") @Table(name = "account")
+@Entity(name = "account")
+@Table(name = "account")
 @NamedQueries({
-    @NamedQuery(name="Account.findAll",
-                query="SELECT u FROM account u"),
-    @NamedQuery(name="Account.findByUsername",
-                query="SELECT u FROM account u where u.username = :username")
-}) 
+    @NamedQuery(name = "Account.findAll",
+            query = "SELECT u FROM account u"),
+    @NamedQuery(name = "Account.findByUsername",
+            query = "SELECT u FROM account u where u.username = :username")
+})
 public class User {
 
     @Transient
     private static long serialVersionUID = 1L;
 
+    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,6 +51,8 @@ public class User {
     private String bio;
     @Column(name = "img")
     private String img;
+    @Column(name = "password")
+    private String password;
 
     @ManyToMany
     @JoinTable(name = "following", joinColumns = {
@@ -61,8 +65,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private Collection<Tweet> tweets;
 
+    @ManyToMany
+    @JoinTable(name = "user_role", joinColumns = {
+        @JoinColumn(name = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "rolename")})
+    private List<Role> roles = new ArrayList();
     /*@OneToMany(mappedBy = "userid")
      private Collection<Long> following = new ArrayList();*/
+
     public User() {
     }
 
@@ -79,6 +89,17 @@ public class User {
         this.web = web;
         this.bio = bio;
         this.img = img;
+        tweets = new ArrayList<>();
+    }
+    
+     public User(String username, String name, String web, String bio, String img, String password) {
+        //this.id = serialVersionUID++;
+        this.username = username;
+        this.name = name;
+        this.web = web;
+        this.bio = bio;
+        this.img = img;
+        this.password = password;
         tweets = new ArrayList<>();
     }
 
@@ -133,7 +154,7 @@ public class User {
     public Collection<User> getFollowing() {
         return Collections.unmodifiableCollection(following);
     }
-    
+
     public Collection<User> getFollowers() {
         return Collections.unmodifiableCollection(followers);
     }
@@ -146,7 +167,7 @@ public class User {
         }
         return followingIds;
     }
-    
+
     public void setFollowing(Collection<User> following) {
         this.following = following;
     }
@@ -175,25 +196,35 @@ public class User {
         if (!follower.amFollowing(this)) {
             follower.addFollowing(this);
         }
-    }  
+    }
 
     public Boolean isFollower(User posFollower) {
-        if (this.followers.contains(posFollower)) {
-            return true;
-        }
-        return false;
+        return this.followers.contains(posFollower);
     }
 
     public Boolean amFollowing(User posFollowing) {
-        if (this.following.contains(posFollowing)) {
-            return true;
-        }
-        return false;
+        return this.following.contains(posFollowing);
     }
 
     public Boolean addTweet(Tweet tweet) {
         tweet.setUser(this);
         return this.tweets.add(tweet);
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

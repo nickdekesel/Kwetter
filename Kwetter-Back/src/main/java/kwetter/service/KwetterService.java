@@ -1,16 +1,19 @@
 package kwetter.service;
 
+import kwetter.dao.SecurityDOA_JPAQualifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import kwetter.dao.SecurityDAO;
 import kwetter.dao.TweetDAO;
 import kwetter.dao.TweetDOA_JPAQualifier;
 import kwetter.event.TweetEvent;
 import kwetter.dao.UserDAO;
 import kwetter.dao.UserDOA_JPAQualifier;
+import kwetter.domain.Role;
 import kwetter.domain.Trend;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
@@ -24,6 +27,9 @@ public class KwetterService {
     @Inject
     @TweetDOA_JPAQualifier
     private TweetDAO tweetDAO;
+    @Inject
+    @SecurityDOA_JPAQualifier
+    private SecurityDAO securityDAO;
        
     @Inject @TweetDOA_JPAQualifier
     private Event<TweetEvent> tweetEvent;
@@ -106,5 +112,15 @@ public class KwetterService {
         userDAO.initUsers();
     }
 
+    public void addRole(String rolename){
+        Role role = new Role(rolename);
+        securityDAO.addRole(role);
+    }
+
+    public void addUserRole(String username, String rolename) {
+        User user = userDAO.find(username);
+        Role role = securityDAO.getRole(rolename);
+        securityDAO.addUserRole(user, role);
+    }
     
 }
