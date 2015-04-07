@@ -44,7 +44,6 @@ services.factory('Websocket', function ($websocket) {
             response = {'error': e};
         }
 
-
         //for (var i = 0; i < response.length; i++) {
         //    tweets.push(response);
         //}

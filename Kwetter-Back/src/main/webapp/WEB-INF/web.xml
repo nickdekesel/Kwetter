@@ -10,21 +10,7 @@
         <web-resource-collection>
             <web-resource-name>Restricted Access - Get Only</web-resource-name>
             <description/>
-            <url-pattern>/users/*</url-pattern>
-            <http-method>GET</http-method>
-        </web-resource-collection>
-        <auth-constraint>
-            <description/>
-            <role-name>admin</role-name>
-        </auth-constraint>
-    </security-constraint>
-    <security-constraint>
-        <display-name>login</display-name>
-        <web-resource-collection>
-            <web-resource-name>login</web-resource-name>
-            <description/>
-            <url-pattern>/*</url-pattern>
-            <http-method>TRACE</http-method>
+            <url-pattern>/webresources/kwetter/users/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description/>

@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import kwetter.domain.Role;
 import kwetter.domain.User;
 
 //@Alternative
@@ -16,6 +18,8 @@ public class UserDAO_JPAImpl implements UserDAO {
     @PersistenceContext
     private EntityManager em;
     
+    @Inject @SecurityDOA_JPAQualifier
+    private SecurityDAO securityDAO;
     
     public UserDAO_JPAImpl() {
     }
@@ -26,6 +30,7 @@ public class UserDAO_JPAImpl implements UserDAO {
         User u2 = new User("Frank", "Frank", "httpF", "geboren 2", "images/pod_orange.png");
         User u3 = new User("Tom", "Tom", "httpT", "geboren 3", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtVs4zUGJV7EBV0JeRCHmnkvGSYHYHE7SU3woeFMmSpiGpc2s");
         User u4 = new User("Sjaak", "Sjaak", "httpS", "geboren 4", "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRribzn3Y1DgTfVkJC4tMnHfFFysfpRBQvD8A8sF9ffURzoV10c3Q");
+        
         u1.addFollowing(u2);
         u1.addFollowing(u3);
         u1.addFollowing(u4);
@@ -36,11 +41,21 @@ public class UserDAO_JPAImpl implements UserDAO {
         u4.addFollowing(u1);
         u4.addFollowing(u2);
         u4.addFollowing(u3);
-
+        
+        Role r1 = new Role("admin");
+        Role r2 = new Role("normal");
+        securityDAO.addRole(r1);
+        securityDAO.addRole(r2);
+        
         em.merge(u1);
         em.merge(u2);
         em.merge(u3);
-        em.merge(u4);      
+        em.merge(u4);    
+        
+        securityDAO.addUserRole(u1, r1);
+        securityDAO.addUserRole(u2, r2);
+        securityDAO.addUserRole(u3, r2);
+        securityDAO.addUserRole(u4, r2);
     }  
 
     @Override
