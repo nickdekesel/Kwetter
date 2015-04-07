@@ -54,12 +54,12 @@
                 <li role="presentation" ng-class="{active:timeline.isTab(2)}"><a href="" ng-click="timeline.setTab(2)">#Trending </a></li>
             </ul> 
             <div ng-show="timeline.isTab(0)">
-                <div ng-show="searchString.tweet.length>0" class="panel panel-info" ng-repeat="searchTweet in allTweets| filter: searchString:strict | orderBy: '-date'">
+                <div ng-show="searchString.tweet.length>0" class="panel panel-info" ng-repeat="searchTweet in getAllTweets()| filter: searchString:strict | orderBy: '-date'">
                     <blockquote><strong>{{searchTweet.username}} - </strong>{{searchTweet.tweet}}</blockquote>
                     <em class="panel-footer pull-right"><span am-time-ago="searchTweet.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{searchTweet.postedFrom}}</em>
                     <hr>
                 </div> 
-                <div ng-hide="searchString.tweet.length>0" class="panel panel-info" ng-repeat="timelineTweet in timelineTweets| orderBy: '-date'">
+                <div ng-hide="searchString.tweet.length>0" class="panel panel-info" ng-repeat="timelineTweet in getTimeline()| orderBy: '-date'">
                     <blockquote><strong>{{timelineTweet.username}} - </strong>{{timelineTweet.tweet}}</blockquote>
                     <em class="panel-footer pull-right"><span am-time-ago="timelineTweet.date| date:'yyyy-MM-dd HH:mm:ss Z'"></span> from {{timelineTweet.postedFrom}}</em>
                     <hr>

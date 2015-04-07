@@ -31,10 +31,6 @@
             <role-name>admin</role-name>
             <role-name>normal</role-name>
         </auth-constraint>
-        <user-data-constraint>
-            <description/>
-            <transport-guarantee>NONE</transport-guarantee>
-        </user-data-constraint>
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>

@@ -1,6 +1,6 @@
 'use strict';
 
-var services = angular.module('kwetter.services', ['ngResource']);
+var services = angular.module('kwetter.services', ['ngResource', 'ngWebSocket']);
 services.factory('UserFactory', function($resource){
     return $resource('http://localhost:8080/Kwetter-Back/webresources/kwetter/users/:firstParam/:secondParam', {firstParam: '@firstParam', secondParam: '@secondParam'}, {
         getArray:{
@@ -26,6 +26,55 @@ services.factory('TweetFactory', function($resource){
     });
 });
 
+services.factory('Websocket', function ($websocket) {
+    // Open a WebSocket connection
+    var url = "ws://localhost:8080/Kwetter-Back/kwetterendpoint";
+    var ws = $websocket(url);
+
+    var tweets = [];
+
+    ws.onMessage(function (event) {
+        console.log('message: ', event.data);
+        var response;
+        try {
+            response = angular.fromJson(event.data);
+            tweets.push(response);
+        } catch (e) {
+            console.log('error: ', e);
+            response = {'error': e};
+        }
+
+
+        //for (var i = 0; i < response.length; i++) {
+        //    tweets.push(response);
+        //}
+    });
+    ws.onError(function (event) {
+        console.log('connection Error', event);
+    });
+    ws.onClose(function (event) {
+        console.log('connection closed', event);
+    });
+    ws.onOpen(function () {
+        console.log('connection open');
+    });
+
+    return {
+        tweets: tweets,
+        status: function () {
+            return ws.readyState;
+        },
+        send: function (message) {
+            if (angular.isString(message)) {
+                ws.send(message);
+            }
+            else if (angular.isObject(message)) {
+                ws.send(JSON.stringify(message));
+            }
+        }
+    };
+});
+
 // Declare app level module which depends on views, and components
 var app = angular.module('kwetter.controllers', [
   'ngRoute',
@@ -42,7 +91,7 @@ app.run(function(amMoment) {
 
 var settedUser;
 
-app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFactory', function($window, $scope, UserFactory, TweetFactory){
+app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFactory', 'Websocket', function($window, $scope, UserFactory, TweetFactory, Websocket){
     
     $scope.mentions = [];
     $scope.trendings = [];
@@ -99,6 +148,14 @@ app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFact
         });
     };
     
+    $scope.getTimeline = function(){
+        return $scope.timelineTweets.concat(Websocket.tweets);
+    };
+    
+    $scope.getAllTweets = function(){
+        return $scope.allTweets.concat(Websocket.tweets);
+    };
+    
     $scope.getUser = function(id){
         return UserFactory.getObject({firstParam: "byId", secondParam: id});
     };
@@ -115,8 +172,10 @@ app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFact
         if($scope.newTweet.tweet.length <=140){
             //this.newTweet.id = this.curUser.tweets.length;
             //this.newTweet.date = Date.now();
+            $scope.newTweet.username = $scope.curUser.username;
+            Websocket.send($scope.newTweet);
             TweetFactory.post({firstParam: "add", secondParam: $scope.curUser.username, tweet: $scope.newTweet.tweet}, function(result){
-                console.log(result);
+                //console.log(result);
                 if(result.done === "true"){
                     setUser($scope.curUser.id);
                     $scope.newTweet = {};
@@ -130,6 +189,7 @@ app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFact
     function getAllTweets(){
         $scope.allTweets = TweetFactory.getArray({});
     };
+    
     /*
     function getTweetsFrom(username){
         $scope.timelineTweets = TweetFactory.getArray({firstParam: username});
@@ -141,10 +201,9 @@ app.controller('TweetController', ['$window','$scope', 'UserFactory', 'TweetFact
     
     function updateTimeline(){
         $scope.timelineTweets = TweetFactory.getArray({firstParam: "timeline", secondParam: $scope.curUser.id});
-    };
+    };   
     
     function updateMentions(){
-        console.log($scope.curUser.username);
         $scope.mentions = TweetFactory.getArray({firstParam: "mentions", secondParam: $scope.curUser.username});
     };
     
