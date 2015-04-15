@@ -47,8 +47,6 @@ public class KwetterRestService {
     @Path("users")
     @Produces("application/json")
     public List<User> getUsers(){  
-        JobOperator jo = BatchRuntime.getJobOperator();
-        long jid = jo.start("tweetsJob", new Properties());
         return kwetterService.findAll();
     }
     

@@ -18,6 +18,8 @@ C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\dao\UserDAO_CollectionImpl.java
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\dao\SecurityDAO.java
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\service\KwetterService.java
+C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\socket\KwetterWebsocketEndpoint.java
+C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\socket\encoders\TweetMessageEncoder.java
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\dao\TweetDOA_JPAQualifier.java
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\dao\UserDAO.java
 C:\Users\Nick\Documents\NetBeansProjects\Semester 6\JEA-Kwetter\Kwetter-Back\src\main\java\kwetter\dao\DataStorageBean.java

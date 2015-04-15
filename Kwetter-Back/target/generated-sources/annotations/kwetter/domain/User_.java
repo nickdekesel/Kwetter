@@ -9,7 +9,7 @@ import kwetter.domain.Role;
 import kwetter.domain.Tweet;
 import kwetter.domain.User;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-04-04T16:48:47")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-04-12T21:22:36")
 @StaticMetamodel(User.class)
 public class User_ { 
 
